@@ -16,6 +16,14 @@ struct ContentView: View {
 
   private let amountOfQuestions = [5, 10, 20]
 
+  private func isAnswerCorrect() -> Bool {
+    multiplicationAnswer == String(tableValue * valueToMultiply)
+  }
+
+  private func generateNewQuestion() {
+      valueToMultiply = Int.random(in: 1...12)
+  }
+
   var body: some View {
     NavigationStack {
       List {
@@ -73,17 +81,17 @@ struct ContentView: View {
   private func startGame() {
     questionCounter = 1
     isPlaying = true
-    valueToMultiply = Int.random(in: 1...12)
+    generateNewQuestion()
   }
 
   private func submitAnswer() {
-    if multiplicationAnswer == String(valueToMultiply * tableValue) {
+    if isAnswerCorrect() {
       score += 2
     } else {
       score -= 1
     }
     multiplicationAnswer = ""
-    valueToMultiply = Int.random(in: 1...12)
+    generateNewQuestion()
 
     if questionCounter == amountOfQuestionsSelected {
       showScoreAlert = true
