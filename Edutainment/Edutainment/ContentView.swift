@@ -89,7 +89,7 @@ struct ContentView: View {
           }
         }
       }
-      .animation(.default, value: isPlaying)
+      .animation(.easeInOut, value: isPlaying)
     }
   }
 
@@ -100,11 +100,15 @@ struct ContentView: View {
   }
 
   private func handleAnswerSubmission() {
+    let generator = UINotificationFeedbackGenerator()
     if isAnswerCorrect() {
       score += 2
+      generator.notificationOccurred(.success)
     } else {
       score -= 1
+      generator.notificationOccurred(.error)
     }
+
     multiplicationAnswer = ""
     questionCounter += 1
 
