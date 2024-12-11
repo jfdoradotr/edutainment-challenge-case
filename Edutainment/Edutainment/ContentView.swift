@@ -47,14 +47,31 @@ struct ContentView: View {
       .navigationTitle("Edutainment")
       .toolbar {
         ToolbarItem(placement: .primaryAction) {
-          Button(isPlaying ? "Restart" : "Start") {
-            withAnimation {
-              isPlaying.toggle()
-            }
+          Button(isPlaying ? "Submit" : "Start") {
+            let action = !isPlaying ? startGame : submitAnswer
+            action()
+          }
+        }
+        if isPlaying {
+          ToolbarItem(placement: .cancellationAction) {
+            Button("Restart", action: restart)
           }
         }
       }
+      .animation(.default, value: isPlaying)
     }
+  }
+
+  private func startGame() {
+    isPlaying = true
+  }
+
+  private func submitAnswer() {
+
+  }
+
+  private func restart() {
+    isPlaying = false
   }
 }
 
