@@ -24,35 +24,47 @@ struct ContentView: View {
       valueToMultiply = Int.random(in: 1...12)
   }
 
+  private var tableSelectionSection: some View {
+    Section(header: Text("Select your table")) {
+      Stepper(value: $tableValue, in: 2...12, step: 1) {
+        Text("\(tableValue)")
+      }
+    }
+  }
+
+  private var questionAmountSection: some View {
+    Section(header: Text("Select the amount of questions")) {
+      Picker("Amount of questions", selection: $amountOfQuestionsSelected) {
+        ForEach(amountOfQuestions, id: \.self) { amountOfQuestions in
+          Text("\(amountOfQuestions)")
+        }
+      }
+      .pickerStyle(.segmented)
+    }
+  }
+
+  private var gameQuestionSection: some View {
+    Section(header: Text("Question \(questionCounter)/\(amountOfQuestionsSelected)")) {
+      HStack {
+        Text("\(tableValue) X \(valueToMultiply) = ")
+        TextField("Answer", text: $multiplicationAnswer)
+          .keyboardType(.numberPad)
+      }
+      .font(.largeTitle)
+    }
+  }
+
   var body: some View {
     NavigationStack {
       List {
         Group {
-          Section(header: Text("Select your table")) {
-            Stepper(value: $tableValue, in: 2...12, step: 1) {
-              Text("\(tableValue)")
-            }
-          }
-          Section(header: Text("Select the amount of questions")) {
-            Picker("Amount of questions", selection: $amountOfQuestionsSelected) {
-              ForEach(amountOfQuestions, id: \.self) { amountOfQuestions in
-                Text("\(amountOfQuestions)")
-              }
-            }
-            .pickerStyle(.segmented)
-          }
+          tableSelectionSection
+          questionAmountSection
         }
         .disabled(isPlaying)
 
         if isPlaying {
-          Section(header: Text("Question \(questionCounter)/\(amountOfQuestionsSelected)")) {
-            HStack {
-              Text("\(tableValue) X \(valueToMultiply) = ")
-              TextField("Answer", text: $multiplicationAnswer)
-                .keyboardType(.numberPad)
-            }
-            .font(.largeTitle)
-          }
+          gameQuestionSection
         }
       }
       .navigationTitle("Edutainment")
