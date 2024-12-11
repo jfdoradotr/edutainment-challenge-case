@@ -57,20 +57,23 @@ struct ContentView: View {
       }
       .navigationTitle("Edutainment")
       .alert("Game is over!", isPresented: $showScoreAlert, actions: {
-        Button("Restart") { restart() }
+        Button("Restart") { resetGameState() }
       }, message: {
         Text("Your score is \(score)")
       })
       .toolbar {
         ToolbarItem(placement: .primaryAction) {
           Button(isPlaying ? "Submit" : "Start") {
-            let action = !isPlaying ? startGame : submitAnswer
-            action()
+            if isPlaying {
+              handleAnswerSubmission()
+            } else {
+              startGame()
+            }
           }
         }
         if isPlaying {
           ToolbarItem(placement: .cancellationAction) {
-            Button("Restart", action: restart)
+            Button("Restart", action: resetGameState)
           }
         }
       }
@@ -84,26 +87,28 @@ struct ContentView: View {
     generateNewQuestion()
   }
 
-  private func submitAnswer() {
+  private func handleAnswerSubmission() {
     if isAnswerCorrect() {
       score += 2
     } else {
       score -= 1
     }
     multiplicationAnswer = ""
-    generateNewQuestion()
-
-    if questionCounter == amountOfQuestionsSelected {
-      showScoreAlert = true
-      return
-    }
-
     questionCounter += 1
+
+    if questionCounter > amountOfQuestionsSelected {
+      showScoreAlert = true
+      isPlaying = false
+    } else {
+      generateNewQuestion()
+    }
   }
 
-  private func restart() {
+  private func resetGameState() {
     isPlaying = false
     questionCounter = 0
+    score = 0
+    multiplicationAnswer = ""
   }
 }
 
