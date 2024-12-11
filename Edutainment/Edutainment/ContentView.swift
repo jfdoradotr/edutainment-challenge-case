@@ -7,6 +7,10 @@ import SwiftUI
 struct ContentView: View {
   @State private var tableValue = 2
   @State private var amountOfQuestionsSelected = 5
+  @State private var isPlaying = true
+  @State private var valueToMultiply = 0
+  @State private var multiplicationAnswer = ""
+  @State private var questionCounter = 1
 
   private let amountOfQuestions = [5, 10, 20]
 
@@ -26,8 +30,22 @@ struct ContentView: View {
           }
           .pickerStyle(.segmented)
         }
+        Section(header: Text("Question \(questionCounter)/\(amountOfQuestionsSelected)")) {
+          HStack {
+            Text("\(tableValue) X \(valueToMultiply) = ")
+            TextField("Answer", text: $multiplicationAnswer)
+          }
+          .font(.largeTitle)
+        }
       }
       .navigationTitle("Edutainment")
+      .toolbar {
+        ToolbarItem(placement: .primaryAction) {
+          Button("Start") {
+
+          }
+        }
+      }
     }
   }
 }
