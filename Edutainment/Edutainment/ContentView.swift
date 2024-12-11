@@ -47,7 +47,7 @@ struct ContentView: View {
       .navigationTitle("Edutainment")
       .toolbar {
         ToolbarItem(placement: .primaryAction) {
-          Button("Start") {
+          Button(isPlaying ? "Restart" : "Start") {
             withAnimation {
               isPlaying.toggle()
             }
