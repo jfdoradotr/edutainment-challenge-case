@@ -10,7 +10,9 @@ struct ContentView: View {
   @State private var isPlaying = false
   @State private var valueToMultiply = 0
   @State private var multiplicationAnswer = ""
-  @State private var questionCounter = 1
+  @State private var questionCounter = 0
+  @State private var score = 0
+  @State private var showScoreAlert = false
 
   private let amountOfQuestions = [5, 10, 20]
 
@@ -39,12 +41,18 @@ struct ContentView: View {
             HStack {
               Text("\(tableValue) X \(valueToMultiply) = ")
               TextField("Answer", text: $multiplicationAnswer)
+                .keyboardType(.numberPad)
             }
             .font(.largeTitle)
           }
         }
       }
       .navigationTitle("Edutainment")
+      .alert("Game is over!", isPresented: $showScoreAlert, actions: {
+        Button("Restart") { restart() }
+      }, message: {
+        Text("Your score is \(score)")
+      })
       .toolbar {
         ToolbarItem(placement: .primaryAction) {
           Button(isPlaying ? "Submit" : "Start") {
@@ -63,15 +71,31 @@ struct ContentView: View {
   }
 
   private func startGame() {
+    questionCounter = 1
     isPlaying = true
+    valueToMultiply = Int.random(in: 1...12)
   }
 
   private func submitAnswer() {
+    if multiplicationAnswer == String(valueToMultiply * tableValue) {
+      score += 2
+    } else {
+      score -= 1
+    }
+    multiplicationAnswer = ""
+    valueToMultiply = Int.random(in: 1...12)
 
+    if questionCounter == amountOfQuestionsSelected {
+      showScoreAlert = true
+      return
+    }
+
+    questionCounter += 1
   }
 
   private func restart() {
     isPlaying = false
+    questionCounter = 0
   }
 }
 
